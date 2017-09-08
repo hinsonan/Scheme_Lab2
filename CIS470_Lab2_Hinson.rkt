@@ -64,9 +64,11 @@
 ;7
 (define (my-nth n l)
   (if (or (> n (length l)) (< n 1))
-    (error "Index out of bounds.")
+    (error "false")
     (if (eq? n 1)
       (car l)
       (my-nth (- n 1) (cdr l)))))
 
 (my-nth 3 '(1 4 5 6))
+
+;8

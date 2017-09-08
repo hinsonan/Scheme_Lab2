@@ -62,3 +62,10 @@
 (newline)
 
 ;7
+(define (nth n l)
+  (if (or (> n (length l)) (< n 1))
+    (error "Index out of bounds.")
+    (if (eq? n 1)
+      (car l)
+      (nth (- n 1) (cdr l)))))
+(nth 3 '(1 4 5 6))

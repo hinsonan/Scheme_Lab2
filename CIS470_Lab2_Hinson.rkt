@@ -71,4 +71,59 @@
 
 (my-nth 3 '(1 4 5 6))
 
+(newline)
+
 ;8
+(define (find-element x l)
+  (if (null? l)
+      (error "False.")
+      (if (equal? (car l) x)
+          1
+          (if (= (find-element x (cdr l)) -1)
+              (error "False")
+              (+ 1 (find-element x (cdr l)))))))
+
+  
+
+(find-element 2 '(1 4 6 7 8 9 2))
+
+(newline)
+
+;9
+(define (find-first-coordinate n liOne)
+  (cond ((null? liOne) #f)
+    ((equal? n (cadar liOne)) (caar liOne))
+    (else (find-first-coordinate n (cdr liOne)))
+        
+ ))
+(find-first-coordinate 'z   '((c z) (r a) (b d)))
+
+(newline)
+;10
+(define (conditional-remove n liOne)
+  (define (looping-funct n liOne)
+    (cond
+        ((not(equal? n (car liOne))) (reverse liOne))
+        (else (reverse (cdr liOne)))
+  
+  ))
+  (looping-funct n (reverse liOne))
+  )
+
+(conditional-remove 'a '(b c d e a g a a))
+
+(newline)
+
+;11
+(define (is-palindrome? s)
+  (let ((chars (string->list s)))
+    (equal? chars (reverse chars))))
+
+
+(is-palindrome? "mom")
+    
+(is-palindrome? "racecar")
+  
+(is-palindrome? "Fat")
+
+

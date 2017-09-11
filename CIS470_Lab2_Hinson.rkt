@@ -1,5 +1,5 @@
 #lang racket
-
+ (require html)
 ;1
 (define(circle-area r)
   (* 3.14159 (* r r))
@@ -99,6 +99,7 @@
 (find-first-coordinate 'z   '((c z) (r a) (b d)))
 
 (newline)
+
 ;10
 (define (conditional-remove n liOne)
   (define (looping-funct n liOne)
@@ -125,5 +126,59 @@
 (is-palindrome? "racecar")
   
 (is-palindrome? "Fat")
+
+(newline)
+
+;12
+(define (is-perfect-number? n)
+  (let loop ((i 1)
+             (sum 0))
+    (cond ((= i n)
+           (= sum n))
+          ((= 0 (modulo n i))
+           (loop (+ i 1) (+ sum i)))
+          (else
+           (loop (+ i 1) sum)))))
+
+(is-perfect-number? 6)
+(is-perfect-number? 7)
+
+(newline)
+
+;13
+
+
+;14
+(define (evaluatable? exps)
+(if (list? exps)
+  (cond ((null? exps) #t)
+         ((equal? (car exps) 'evaluatable?) (evaluatable? (cdr exps)))
+         ((equal? (car exps) '+) (evaluatable? (cdr exps)))
+         ((equal? (car exps) '-) (evaluatable? (cdr exps)))
+         ((equal? (car exps) '*) (evaluatable? (cdr exps)))
+         ((equal? (car exps) '/) (evaluatable? (cdr exps)))
+         ((number? (car exps)) (evaluatable? (cdr exps)))
+         ((list? exps)(evaluatable? (car exps)))
+         (else #f))
+  (cond ((null? exps) #t)
+        ((string? exps) #t)
+        ((number? exps) #t)
+        (else #f))
+  ))
+
+(evaluatable? 6)
+;true
+(evaluatable? '(+ 2 4))
+;true
+(evaluatable? '( evaluatable? (+ 2 4)) )
+;true
+(evaluatable? '(blah blah 4)) 
+;False
+
+
+
+
+;15
+
 
 

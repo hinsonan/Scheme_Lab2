@@ -195,22 +195,15 @@
 (newline)
 
 ;14
-(define (evaluatable? exps)
-(if (list? exps)
-  (cond ((null? exps) #t)
-         ((equal? (car exps) 'evaluatable?) (evaluatable? (cdr exps)))
-         ((equal? (car exps) '+) (evaluatable? (cdr exps)))
-         ((equal? (car exps) '-) (evaluatable? (cdr exps)))
-         ((equal? (car exps) '*) (evaluatable? (cdr exps)))
-         ((equal? (car exps) '/) (evaluatable? (cdr exps)))
-         ((number? (car exps)) (evaluatable? (cdr exps)))
-         ((list? exps)(evaluatable? (car exps)))
-         (else #f))
-  (cond ((null? exps) #t)
-        ((string? exps) #t)
-        ((number? exps) #t)
-        (else #f))
-  ))
+(define (evaluatable? lst)
+  (if (list? lst)
+      (if (null? lst)
+          #f
+          (with-handlers ([exn:fail? (lambda (exn) '#f)])
+            (eval lst)
+              #t
+          ))
+     #f))
 
 (evaluatable? 6)
 ;true

@@ -146,6 +146,52 @@
 (newline)
 
 ;13
+(define (n2t n)
+  (define 1to19     '("one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven" "twelve"
+                          "thirteen" "fourteen" "fifteen" "sixteen" "seventeen" "eighteen" "nineteen"))
+  (define multof10  '("twenty" "thirty" "forty" "fifty" "sixty" "seventy" "eighty" "ninety"))
+  (define thousands '("thousand" "million" "billion" "trillion" "quadrillion" "quintillion" "sextillion" "septillion" "octillion" "nonillion" "decillion" "undecillion"))
+  (cond
+    ((= n 0) '("zero"))  ; zero is a special case since from now on all 0 will be suppressed
+    ((< n 0) (cons "minus" (n2t (- n))))
+    (else
+     (let loop ((n n) (units thousands) (res '()))
+       (cond
+         ; --- below 1000
+         ((= n 0)    res)
+         ((< 0 n 20) (cons (list-ref 1to19    (- n 1)) res))
+         ((< n 100)  (cons (list-ref multof10 (- (quotient n 10) 2))
+                           (loop (remainder n 10) '() res)))
+         ((< n 1000) (loop (quotient n 100)
+                           '()
+                           (cons 'hundred (loop (remainder n 100) '() res))))
+         (else
+          ; --- 1000 and above
+          (let ((q   (quotient n 1000))
+                (res (loop (remainder n 1000) thousands res)))
+            (if (zero? q)
+                res
+                (loop q (cdr units) (cons (car units) res))))))))))
+
+(define (range-to-letter-count upper-bound lower-bound)
+  (define acc 0)
+  (define (iteration upper-bound lower-bound acc)
+(if (> upper-bound 0)
+    (set! acc (+ acc (string-length(car(n2t upper-bound)))))
+    (set! acc (+ acc (string-length(car(n2t (abs upper-bound))))))
+    )
+    ;(set! acc (+ acc (string-length(car(n2t upper-bound)))))
+    (if (> upper-bound lower-bound)
+        (iteration (- upper-bound 1) lower-bound acc)
+        acc
+        )
+    )
+  (iteration upper-bound lower-bound acc)
+  )
+
+(range-to-letter-count 5 -1)
+
+
 
 
 ;14
@@ -175,10 +221,9 @@
 (evaluatable? '(blah blah 4)) 
 ;False
 
-
+(newline)
 
 
 ;15
-
 
 

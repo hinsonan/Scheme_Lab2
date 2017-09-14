@@ -10,12 +10,12 @@
 
 ;2
 (define(miles-to-nautical x)
-  (* x 1.15)
+  (* x 0.868976)
 
 )
 
 (define(mph-to-knots x)
-  (* x 1.15077945)
+  (* x 0.868976)
 )
 
 (miles-to-nautical 100)
@@ -25,18 +25,28 @@
 (newline)
 
 ;3
-(define(kilometers-to-nautical x)
-  (* 1.6093 x)
-)
+(define (kilometers-to-nautical kilos)
+  (if (> kilos 0)
+      (* 0.539957 kilos)
+      0
+      )
+  )
+
 (kilometers-to-nautical 100)
+
 
 (newline)
 
 ;4
-(define (hypotenuse x y)
-  (sqrt(+ (* x x) (* y y)))
+(define (hypotenuse leg-one leg-two)
+  (cond ((= leg-one 0) "This is not a valid triangle")
+        ((= leg-two 0) "This is not a valid triangle")
+        (else (sqrt (+ (* leg-one leg-one) (* leg-two leg-two)))
+      )
   )
-(hypotenuse 3 4)
+)
+(hypotenuse 9 16)
+
 
 ;5
 (define(F-TO-C x)
@@ -63,29 +73,28 @@
 
 ;7
 (define (my-nth n l)
-  (if (or (> n (length l)) (< n 1))
-    (error "false")
-    (if (eq? n 1)
-      (car l)
-      (my-nth (- n 1) (cdr l)))))
+  (cond ((null? l) "The index is out of bounds")
+        ((= n 1)(car l))
+        (else (my-nth (- n 1)(cdr l)))
+  )
+  )
 
-(my-nth 3 '(1 4 5 6))
+(my-nth 8 '(1 2 3 4 45 8 9 27 201 20))
+
 
 (newline)
 
 ;8
 (define (find-element x l)
   (if (null? l)
-      (error "False.")
+      #f
       (if (equal? (car l) x)
           1
           (if (= (find-element x (cdr l)) -1)
-              (error "False")
+              #f
               (+ 1 (find-element x (cdr l)))))))
 
-  
-
-(find-element 2 '(1 4 6 7 8 9 2))
+(find-element '4 '(4 8 15 16 23 42))
 
 (newline)
 
@@ -195,6 +204,7 @@
 (newline)
 
 ;14
+;For some reason this only works down in the interaction window
 (define (evaluatable? lst)
   (if (list? lst)
       (if (null? lst)
@@ -219,4 +229,63 @@
 
 ;15
 
+(define (string-split str)
 
+  (define (char->string c)
+    (make-string 1 c))
+
+  (define (string-first-char str)
+    (string-ref str 0))
+
+  (define (string-first str)
+    (char->string (string-ref str 0)))
+
+  (define (string-rest str)
+    (substring str 1 (string-length str)))
+
+  (define (string-split-helper str chunk lst)
+  (cond 
+    [(string=? str "") (reverse (cons chunk lst))]
+    [else
+     (cond
+       [(char=? (string-first-char str) #\space) (string-split-helper (string-rest str) "" (cons chunk lst))]
+       [else
+        (string-split-helper (string-rest str) (string-append chunk (string-first str)) lst)]
+       )
+     ]
+    )
+  )
+
+  (string-split-helper str "" empty)
+  )
+
+
+(define (balanced-divs? html-parse)
+  (set! html-parse (string-split html-parse))
+  (define acc 0)
+
+  
+  (define (iteration lst acc)
+    (cond
+      ((null? lst)(answer acc))
+      ((equal? (car lst) "<div") (set! acc (+ acc 1)))
+      ((equal? (car lst) "<div>") (set! acc (+ acc 1)))
+      ((equal? (car lst) "</div>") (set! acc (- acc 1)))
+      )
+    (if (not(null? lst))
+        (iteration (cdr lst) acc)
+        (answer acc)
+        )
+
+    )
+(define (answer acc)
+  (if (= acc 0)
+        #t
+        #f
+        )
+  )
+  (iteration html-parse acc)
+  )
+
+
+(balanced-divs?  "<div class=”container”> <h1> Heading 1 </h1> <nav> nav items </nav> <div class=”main”>  </div> </div>")

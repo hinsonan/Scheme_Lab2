@@ -125,9 +125,13 @@
 (newline)
 
 ;11
-(define (is-palindrome? s)
-  (let ((chars (string->list s)))
-    (equal? chars (reverse chars))))
+(define (is-palindrome? x)
+  (if (number? x)
+      (let((num (string->list(number->string x))))
+        (equal? num (reverse num)))
+      (let ((chars (string->list(string-downcase x))))
+                (equal? chars (reverse chars)))))
+
 
 
 (is-palindrome? "mom")
@@ -205,15 +209,18 @@
 
 ;14
 ;For some reason this only works down in the interaction window
+(define (atom? x) (not (or (pair? x) (null? x))))
+
 (define (evaluatable? lst)
-  (if (list? lst)
+  (cond (list? lst) (atom? lst))
       (if (null? lst)
           #f
           (with-handlers ([exn:fail? (lambda (exn) '#f)])
             (eval lst)
               #t
           ))
-     #f))
+     )
+
 
 (evaluatable? 6)
 ;true
